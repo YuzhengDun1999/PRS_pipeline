@@ -1,0 +1,61 @@
+Written by Jialan Ma, with help of Martina Fu, Jingning Zhang, and Jin Jin.
+Contact email for questions: jma59@jh.edu 
+
+----------------------- Description of PRS pipeline -----------------------  
+
+This pipeline is used to calculate individual polygenic risk scores of chronic diseases with three inputs.
+Inputs:
+  1. Summary statistics of the chronic disease.
+  2. Reference PLINK binary files (for example: reference files from 1000 genomes project )
+  3. Individual genotype and phenotype information in PLINK binary files (for example: UKBiobank individual genotype and phenotype information).
+
+Outputs:
+  1. Polygenic risk scores of each individual
+  2. Odds ratio per standard deviation unit of each predictor
+  3. Confidence interval
+  4. ROC plot
+  5. AUC of the ROC plot
+
+The pipeline is divided into two parts.
+The first part is to calculate effect sizes of significant SNPs. The user can choose from three different algorithms: Lassosum, LDPred2, and Clumping and Thresholding.
+Inputs required:
+  1. Summary statistics
+  2. Reference PLINK binary files
+Scripts:
+  Quality control of data:
+    QC.R, QC.sh.
+  Calculate effect sizes (choose one set):
+    1. Lassosum: Lassosum.R, Lassosum.sh
+    2. LDPred2: LDPred2.R, LDPred2.sh
+    3. Clumping and Thresholding: CandT.R, CandT.sh
+
+The second part is to calculate polygenic risk scores of individuals using effect sizes.
+Inputs required:
+  Individual genotype and phenotype information in PLINK binary files
+Scripts:
+  Use PLINK to calculate PRS (choose one set):
+    Note: In this part, scripts of Lassosum and LDPred2 are the same. However, script of Clumping and Thresholding differs a bit.
+          Please make sure you use the correct set of script for each algorithm.
+    1. Lassosum: tune_script.sh, test_script.sh (in Lassosum folder)
+    2. LDPred2: tune_script.sh, test_script.sh (in LDPred2 folder)
+    3. Clumping and Thresholding: tune_script.sh, test_script.sh (in CandT folder)
+  Model perfomance evaluation (choose one): Lassosum_prs.R; LDPred2_prs.R; CandT_prs.R
+
+----------------------- Steps to Use ----------------------- 
+1. Perform QC using QC.sh and QC.R
+Note: Change parameters and paths in QC.sh and QC.R as specified in the scripts.
+
+2. Choose one algorithm from Clumping and Thresholding, LDPred2, and Lassosum to calculate bete (effect size) values.
+    Note: Change parameters and paths as specified in the scripts.
+    Calculate effect sizes (choose one set):
+      1. Lassosum: Lassosum.R, Lassosum.sh
+      2. LDPred2: LDPred2.R, LDPred2.sh
+      3. Clumping and Thresholding: CandT.R, CandT.sh
+
+3. Calculate PRS and evaluate model performance.
+    Note: Change parameters and paths as specified in the scripts.
+    Use PLINK to calculate PRS (choose one set):
+      1. Lassosum: tune_script.sh, test_script.sh (in Lassosum folder)
+      2. LDPred2: tune_script.sh, test_script.sh (in LDPred2 folder)
+      3. Clumping and Thresholding: tune_script.sh, test_script.sh (in CandT folder)
+    Model perfomance evaluation (choose one): Lassosum_prs.R; LDPred2_prs.R; CandT_prs.R
